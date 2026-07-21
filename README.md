@@ -1,6 +1,6 @@
-# ${{ values.name }}
+# web-services
 
-${{ values.description }}
+web-services service
 
 ## Stack
 - React 18 · Vite 5 · nginx

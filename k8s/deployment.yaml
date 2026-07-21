@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${{ values.name }}
+  name: web-services
   labels:
-    app: ${{ values.name }}
+    app: web-services
     dxp.io/managed: "true"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ${{ values.name }}
+      app: web-services
   template:
     metadata:
       labels:
-        app: ${{ values.name }}
-        backstage.io/kubernetes-id: ${{ values.name }}
+        app: web-services
+        backstage.io/kubernetes-id: web-services
     spec:
       nodeSelector:
         role: workload
@@ -24,8 +24,8 @@ spec:
         value: workload
         effect: NoSchedule
       containers:
-      - name: ${{ values.name }}
-        image: harbor.dxp/dxp/${{ values.name }}:latest
+      - name: web-services
+        image: harbor.harbor.svc.cluster.local/dxp/web-services:8c2d4f7
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
@@ -46,10 +46,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ${{ values.name }}
+  name: web-services
 spec:
   selector:
-    app: ${{ values.name }}
+    app: web-services
   ports:
   - port: 80
     targetPort: 80
@@ -58,20 +58,20 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ${{ values.name }}
+  name: web-services
   labels:
-    app: ${{ values.name }}
+    app: web-services
     dxp.io/managed: "true"
 spec:
   ingressClassName: nginx
   rules:
-  - host: ${{ values.name }}.68.221.5.247.nip.io
+  - host: web-services.68.221.5.247.nip.io
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: ${{ values.name }}
+            name: web-services
             port:
               number: 80
